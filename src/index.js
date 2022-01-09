@@ -1,7 +1,6 @@
 import express from "express";
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { DbConnection } from "./db/db.js";
 import { authRouter } from "./routes/auth.routes.js";
 
 dotenv.config()
@@ -20,6 +19,5 @@ app.get("/", (req, res) => {
 })
 
 app.listen(process.env.PORT, async()=>{
-    await DbConnection()
     console.log("Server listen on port", process.env.PORT);
 })

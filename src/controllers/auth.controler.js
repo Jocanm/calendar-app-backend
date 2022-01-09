@@ -1,32 +1,44 @@
-import { validationResult } from "express-validator"
+import PrismaProvider from "@prisma/client"
+const {PrismaClient} = PrismaProvider
 
-// TENGO QUE VER 10.EXPRESS-VALIDATOR MIN: 10:10 va a aplicar las validaciones al email
+const prisma = new PrismaClient()
+const {user} = prisma
 
-export const registerUser = (req, res) => {
+export const registerUser = async(req, res) => {
+    try {
+        const {name,email,password} = req.body 
 
-    const {name,email,password} = req.body 
-
-    const errors = validationResult( req )
-
-    if(!errors.isEmpty()){
-        return res.status(400).json({
-            ok:false,
-            errors:errors.mapped()
+        const newUser = await user.create({
+            data:{
+                name,email,password
+            }
         })
+
+        res.status(201).json({
+            ok:true,
+            message:"User created succesfully",
+            data:newUser
+        })
+    } catch (error) {
+        console.log(error);
+        res.json({error})
     }
-
-    res.status(201).json({
-        ok:true,
-        message:"User created succesfully",
-        data:{name,email,password}
-    })
-
 }
 
 export const loginUser = (req, res) => {
-    res.send("/Ruta para login de usuarios")
+    const {email,password} = req.body 
+
+    res.status(201).json({
+        ok:true,
+        data:{email,password}
+    })
 }
 
-export const refreshToken = (req, res) => {
-    res.send("Ruta para renovar el token")
+export const refreshToken = async(req, res) => {
+
+    const users = await user.findMany({
+        where:{email:"jluisangarita@mail.atlantico.edu.co"}
+    })
+    res.json({users})
+
 }
