@@ -1,28 +1,56 @@
-import PrismaProvider from "@prisma/client"
-const {PrismaClient} = PrismaProvider
+// import PrismaProvider from "@prisma/client"
+// const {PrismaClient} = PrismaProvider
+
+// const prisma = new PrismaClient()
+// const {user} = prisma
+
+import PrismaProvider from '@prisma/client'
+const {PrismaClient} = PrismaProvider;
 
 const prisma = new PrismaClient()
-const {user} = prisma
+const {user} = prisma;
+
 
 export const registerUser = async(req, res) => {
-    try {
-        const {name,email,password} = req.body 
+    const {name,email,password} = req.body
 
-        const newUser = await user.create({
+    try {
+
+        let usuario = await user.findUnique({
+            where:{
+                email
+            }
+        })
+
+        if(usuario){
+            return res.status(400).json({
+                ok:false,
+                message:"Email is already in use"
+            })
+        }
+
+        usuario = await user.create({
             data:{
                 name,email,password
             }
         })
+        
+        delete usuario.password
 
         res.status(201).json({
             ok:true,
             message:"User created succesfully",
-            data:newUser
+            data:usuario
         })
+
     } catch (error) {
         console.log(error);
-        res.json({error})
+        res.status(500).json({
+            ok:false,
+            msg:"An error occurred while creating an user"
+        })
     }
+
 }
 
 export const loginUser = (req, res) => {
@@ -35,10 +63,5 @@ export const loginUser = (req, res) => {
 }
 
 export const refreshToken = async(req, res) => {
-
-    const users = await user.findMany({
-        where:{email:"jluisangarita@mail.atlantico.edu.co"}
-    })
-    res.json({users})
-
+    res.send("endpoint para refrescar el token")
 }
