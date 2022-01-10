@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt'
 import PrismaProvider from '@prisma/client'
+import { generateJWT } from '../../helpers/jwt.js';
 const {PrismaClient} = PrismaProvider;
 
 const prisma = new PrismaClient()
@@ -35,10 +36,12 @@ export const registerUser = async(req, res) => {
         
         delete usuario.password
 
+        const token = await generateJWT(usuario.id,usuario.name)
+
         res.status(201).json({
             ok:true,
             message:"User created succesfully",
-            data:usuario
+            data:{...usuario,token},
         })
 
     } catch (error) {
@@ -76,11 +79,14 @@ export const loginUser = async(req, res) => {
             })
         }
 
+        const token = await generateJWT(usuario.id,usuario.name)
+
         res.status(200).json({
             ok:true,
             message:"Valid fields",
             id:usuario.id,
-            name:usuario.name
+            name:usuario.name,
+            token
         })
 
     } catch (error) {
@@ -94,5 +100,14 @@ export const loginUser = async(req, res) => {
 }
 
 export const refreshToken = async(req, res) => {
-    res.send("endpoint para refrescar el token")
+
+    const {uid,name} = req;
+
+    const token = await generateJWT(uid,name);
+    
+    res.json({
+        ok:true,
+        token
+    })
+
 }

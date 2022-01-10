@@ -6,11 +6,18 @@
 import express from 'express';
 import {check} from 'express-validator';
 import { validateFields } from '../../middlewares/validateFields.js';
+import { validateJwt } from '../../middlewares/validateJWT.js';
 import {loginUser,refreshToken,registerUser} from '../controllers/auth.controler.js';
 
 export const authRouter = express.Router()
 
-authRouter.get("/new",refreshToken)
+authRouter.get(
+    "/new",
+    [
+        validateJwt
+    ],
+    refreshToken
+)
 
 authRouter.post(
     "/register",
