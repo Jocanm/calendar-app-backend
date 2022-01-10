@@ -10,6 +10,7 @@ export const getEventos = (req,res) => {
 
 export const postEvent = (req, res) => {
 
+    res.json(req.body)
 
 }
 
