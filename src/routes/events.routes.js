@@ -18,12 +18,22 @@ eventsRouter.post(
     [
         check('title','El titulo es obligatorio').not().isEmpty(),
         check('start','Fecha de inicio es obligatoria o debe ser un valor valido').custom( isDate ),
+        check('end','Fecha final es obligatoria o debe ser un valor valido').custom( isDate ),
         validateFields
     ]
     , postEvent
 ) 
 
-eventsRouter.put('/:id', updateEvent)
+eventsRouter.put(
+    '/:id',
+    [
+        check('title','El titulo es obligatorio').not().isEmpty(),
+        check('start','Fecha de inicio es obligatoria o debe ser un valor valido').custom( isDate ),
+        check('end','Fecha final es obligatoria o debe ser un valor valido').custom( isDate ),
+        validateFields
+    ],
+    updateEvent
+)
 
 eventsRouter.delete('/:id', deleteEvent)
 
