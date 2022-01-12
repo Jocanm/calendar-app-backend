@@ -15,12 +15,13 @@ export const validateJwt = (req, res, next) => {
 
     try {
         
-        const {id,name} = jwt.verify(
+        const {id,name,email} = jwt.verify(
             token,process.env.SECRET_JWT_SEED
         );
 
-        req.uid = id;
+        req.id = id;
         req.name = name;
+        req.email = email;
 
     } catch (error) {
         return res.status(401).json({ok:false, msg:"Token no valido"})

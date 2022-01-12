@@ -33,7 +33,7 @@ export const getEventos = async (req,res) => {
 
 export const postEvent = async(req, res) => {
 
-    req.body.userId = req.uid
+    req.body.userId = req.id
 
     req.body.start = new Date(req.body.start);
     req.body.end = new Date(req.body.end);
@@ -66,7 +66,7 @@ export const postEvent = async(req, res) => {
 export const updateEvent = async(req, res) => {
 
     const {id:eventId} = req.params;
-    const {uid} = req
+    const {id} = req
 
     try {
         
@@ -81,7 +81,7 @@ export const updateEvent = async(req, res) => {
             })
         }
 
-        if(evento.userId !== uid){
+        if(evento.userId !== id){
             return res.status(401).json({
                 ok:false,
                 msg:"No esta autorizado para editar este evento"
@@ -118,7 +118,7 @@ export const updateEvent = async(req, res) => {
 export const deleteEvent = async(req, res) => {
 
     const {id:eventId} = req.params; 
-    const {uid} = req;
+    const {id} = req;
 
     try {
 
@@ -133,7 +133,7 @@ export const deleteEvent = async(req, res) => {
             })
         }
 
-        if(evento.userId !== uid){
+        if(evento.userId !== id){
             return res.status(401).json({
                 ok:false,
                 msg:"No esta autorizado para eliminar este evento"
