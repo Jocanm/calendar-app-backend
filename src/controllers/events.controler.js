@@ -18,7 +18,10 @@ export const getEventos = async (req,res) => {
             }
         })
 
-        res.json(eventos)
+        res.json({
+            ok:true,
+            eventos
+        })
 
     } catch (error) {
         console.log(error);
@@ -43,6 +46,13 @@ export const postEvent = async(req, res) => {
         const evento = await events.create({
             data:{
                 ...req.body,
+            },
+            include:{
+                user:{
+                    select:{
+                        name:true
+                    }
+                }
             }
         })
 
@@ -88,15 +98,10 @@ export const updateEvent = async(req, res) => {
             })
         }
 
-        const data = {
-            ...req.body,
-            start: new Date(req.body.start),
-            end: new Date(req.body.end)
-        }
 
         const newEvent = await events.update({
             where:{id:eventId},
-            data
+            data:req.body
         })
 
         res.json({
